@@ -13,3 +13,21 @@
 .NOTES
     General notes
 #>
+$SourceConnection =Connect-PnPOnline -url "https://yavatmal3.sharepoint.com/sites/modernTeam"  -ReturnConnection
+$TargetConnection =Connect-PnPOnline -url "https://yavatmal3.sharepoint.com/sites/ModernTeam/testClassic" -ReturnConnection
+
+$SourceSite = Get-PnPWeb -Connection $SourceConnection 
+$TargetSite = Get-PnPWeb -Connection $TargetConnection
+$query = "<View Scope='RecursiveAll'><RowLimit>5000</RowLimit></View>"  
+
+$list= Get-PnPList test676 -Connection $SourceConnection
+
+$Items =Get-PnPListItem -List $list -Query $query -Connection $SourceConnection
+$count=0
+foreach($item in $Items)
+{
+#Write-host $item.Id
+$count++
+
+}
+Write-host $count

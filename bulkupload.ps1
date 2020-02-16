@@ -13,8 +13,8 @@
 .NOTES
    General notes
 #>
-<Connect-PnPOnline -Url "https://yavatmal3.sharepoint.com/siteodernTeam"
-for ( $i=2000; $i -lt 6000; $i++)
+Connect-PnPOnline -Url "https://yavatmal3.sharepoint.com/sites/modernTeam"
+for ( $i=6000; $i -lt 8000; $i++)
 {
    Write-Host "Value of i is" $i
 
