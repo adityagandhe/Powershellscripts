@@ -14,10 +14,9 @@
    General notes
 #>
 Connect-PnPOnline -Url "https://yavatmal3.sharepoint.com/sites/modernTeam"
-for ( $i=6000; $i -lt 8000; $i++)
-{
-   Write-Host "Value of i is" $i
+for ( $i = 6000; $i -lt 8000; $i++) {
+    Write-Host "Value of i is" $i
 
-   Add-PnPListItem -List "test676" -Values @{"Title"=$i}
+    Add-PnPListItem -List "test676" -Values @{"Title" = $i }
 
 }

@@ -16,6 +16,10 @@
 $SourceConnection =Connect-PnPOnline -url "https://yavatmal3.sharepoint.com/sites/modernTeam"  -ReturnConnection
 $TargetConnection =Connect-PnPOnline -url "https://yavatmal3.sharepoint.com/sites/ModernTeam/testClassic" -ReturnConnection
 
+
+#Site Collection
+$collection = Get-PnPSite -Connection $SourceConnection
+Get-PnPProperty $collection -Property Id,Usage,Owner
 $SourceSite = Get-PnPWeb -Connection $SourceConnection 
 $TargetSite = Get-PnPWeb -Connection $TargetConnection
 $query = "<View Scope='RecursiveAll'><RowLimit>5000</RowLimit></View>"  

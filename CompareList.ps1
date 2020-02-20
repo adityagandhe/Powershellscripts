@@ -50,19 +50,35 @@ foreach ($sourceList in $SourceListCollection ) {
             $fieldstoCompare = @()
             $sourceListItem = @()
             $targetlistItem = @()
-            foreach ($feild in $SourcelistFeilds) {
-                if (($feild.TypeDisplayName -eq "Single line of text") -or ($feild.TypeDisplayName -eq "person or group")) {
-                    $fieldstoCompare += $feild.Title
-                }
+           <# foreach ($feild in $SourcelistFeilds) {
+           #     if (($feild.TypeDisplayName -eq "Yes/No")  -or ($feild.TypeDisplayName -eq "Choice") -or ($feild.TypeDisplayName -eq "Date and Time")) {
+            #        $fieldstoCompare += $feild.Title
+               # }#>
 
             }
             $query = "<View Scope='RecursiveAll'><RowLimit>5000</RowLimit></View>"
             if ($sourcelist.ItemCount -GT 0) {
                 $SourceItemCollection = Get-PnPListItem -List $sourcelist.Title -Query $query -Connection $SourceConnection
-                foreach ($item in  $SourceItemCollection) {
+                
+                foreach ($item in  $SourceItemCollection)
+ {                     
                     $VALUE = $item.ID.ToString() + "," + $item["Author"].LookupValue.ToString() + "," + $item["Editor"].LookupValue.ToString()
-                    foreach ($fieldvalue in $fieldstoCompare) {
-                        $VALUE = $VALUE + "," + $item[$fieldvalue]
+                    foreach ($fieldvalue in $SourcelistFeilds)
+ {
+
+                     if(($fieldvalue.TypeDisplayName -eq "Person or Group") -or ($ieldvalue.TypeDisplayName -eq "Lookup")  )
+                     {
+                   if($item[$fieldvalue.Title] -ne $null)
+                   {
+                    $VALUE = $VALUE + ","+$item[$fieldvalue.Title].LookupValue.ToString()
+                    }
+                     }
+                     if (($fieldvalue.TypeDisplayName -eq "Choice")) {
+                      if($item[$fieldvalue.Title] -ne $null)
+                   {
+                        $VALUE = $VALUE + "," + $item[$fieldvalue.Title]
+                      }  
+                       }
                     }
 
                     $VALUE = $VALUE
@@ -76,13 +92,27 @@ foreach ($sourceList in $SourceListCollection ) {
             if ($targetList.ItemCount -gt 0) {
                 $TargetItemCollection = Get-PnPListItem -List $sourcelist.Title -Query $query  -Connection $TargetConnection
 
-                foreach ($item in  $TargetItemCollection) {
-
+                   foreach ($item in   $TargetItemCollection)
+ {                     
                     $VALUE = $item.ID.ToString() + "," + $item["Author"].LookupValue.ToString() + "," + $item["Editor"].LookupValue.ToString()
-                    foreach ($fieldvalue in $fieldstoCompare) {
-                        $VALUE = $VALUE + "," + $item[$fieldvalue]
-                    }
+                    foreach ($fieldvalue in $SourcelistFeilds)
+ {
 
+                     if(($fieldvalue.TypeDisplayName -eq "Person or Group") -or ($ieldvalue.TypeDisplayName -eq "Lookup")  )
+                     {
+                   if($item[$fieldvalue.Title] -ne $null)
+                   {
+                    $VALUE = $VALUE + ","+$item[$fieldvalue.Title].LookupValue.ToString()
+                    }
+                     }
+                     if (($fieldvalue.TypeDisplayName -eq "Choice")) {
+                      if($item[$fieldvalue.Title] -ne $null)
+                   {
+                        $VALUE = $VALUE + "," + $item[$fieldvalue.Title]
+                      }  
+                       }
+                    }
+                    
                     $VALUE = $VALUE
                     $props = @{'Key' = $VALUE }
 
@@ -98,4 +128,3 @@ foreach ($sourceList in $SourceListCollection ) {
         }
 
     }
-}
