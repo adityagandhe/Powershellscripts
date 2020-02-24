@@ -15,12 +15,15 @@
 #>
 
 $SourceConnection =Connect-PnPOnline -url "https://yavatmal3.sharepoint.com/sites/modernTeam"  -ReturnConnection
+#$users =Get-PnPUser -Connection $SourceConnection
  Function ProcessAlerts($site)
  {
- $users =Get-PnPUser -Web $site
 
+ function GetAlertForUser ($users)
+ {
   foreach($user in $users)
  {
+ #Write-Host "fetching for user"$user $site.url
  $Alerts= Get-PnPAlert -Web $site -User $user
  if($Alerts.Count -gt 0)
  {
@@ -34,23 +37,18 @@ $SourceConnection =Connect-PnPOnline -url "https://yavatmal3.sharepoint.com/site
 }
 }
 }
- Function ProcessLists($site)
- {
- 
- Write-Host -ForegroundColor Yellow "Site URL:"$site.Url
- $lists= Get-PnPList -Web $site
- foreach ($list in $lists)
- {
- Write-Host $list.Title
+ $users =Get-PnPUser -Web $site 
+# $SiteCollectionUsers = Get-PnPSiteCollectionAdmin
+GetAlertForUser $users
+#GetAlertForUser $SiteCollectionUsers
 
-}
 }
 
 #Site Collection
 
 $subsites= Get-PnPSubWebs -Recurse
 $web = Get-PnPWeb 
-#$users =Get-PnPUser -Web $web
+
 ProcessAlerts $web
 
 

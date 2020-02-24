@@ -14,6 +14,15 @@
     General notes
 #>
 
+#Read the Flag values
+
+$isCreatedByRequied = "Yes"
+$isModifiedByRequired = "Yes"
+$isCreatedRequied = "Yes"
+$isModifiedRequired = "Yes"
+$isChoiceRequired = "Yes"
+$isDateRequired = "Yes"
+$isPeoplePickerRequired = "Yes"
 
 $SourceConnection = Connect-PnPOnline -url "https://yavatmal3.sharepoint.com/sites/modernTeam"  -ReturnConnection
 $TargetConnection = Connect-PnPOnline -url "https://yavatmal3.sharepoint.com/sites/ModernTeam/testClassic" -ReturnConnection
