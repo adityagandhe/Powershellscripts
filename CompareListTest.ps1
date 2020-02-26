@@ -16,8 +16,24 @@
 
 #Read the Flag values
 
-$isCreatedByRequied = "No"
-$isModifiedByRequired = "No"
+$Option1Data = Import-Csv ""
+
+$Option2Data =
+
+$Option3Data =
+
+
+Write-Host -ForegroundColor Yellow "Choose option 1 to compare Site and its childs sites,all the lists would be compared"
+
+Write-Host -ForegroundColor Yellow "Choose option 2 to compare Site ,all the lists would be compared"
+
+Write-Host -ForegroundColor Yellow "Choose option 3 to compare specific lists of the given Site"
+
+$ScriptOption = "Enter 1 /2/ 3 and make sure that the input file has the data in the required format"
+
+
+$isCreatedByRequied = "Yes"
+$isModifiedByRequired = "Yes"
 $isCreatedRequied = "No"
 $isModifiedRequired = "No"
 $isChoiceRequired = "No"
@@ -25,8 +41,9 @@ $isDateRequired = "No"
 $isPersonRequired = "No"
 $isLookupRequired = "Yes"
 $isYesNoRequired = "No"
-$isVersionRequired = "Yes"
-$isCalculatedRequired = "Yes"
+$isVersionRequired = "No"
+$isCalculatedRequired = "No"
+
 
 $SourceConnection = Connect-PnPOnline -url "https://yavatmal3.sharepoint.com/sites/modernTeam" -Credentials (Get-Credential)  -ReturnConnection
 $TargetConnection = Connect-PnPOnline -url "https://yavatmal4.sharepoint.com/sites/modernTeam" -Credentials (Get-Credential)  -ReturnConnection
