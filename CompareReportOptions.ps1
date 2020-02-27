@@ -27,17 +27,17 @@ $ScriptOption = Read-Host "Enter 1 /2/ 3 and make sure that the input file has t
 
 
 
-$isCreatedByRequied = "Yes"
-$isModifiedByRequired = "Yes"
+$isCreatedByRequied = "No"
+$isModifiedByRequired = "No"
 $isCreatedRequied = "No"
 $isModifiedRequired = "No"
-$isChoiceRequired = "Yes"
-$isDateRequired = "Yes"
-$isPersonRequired = "Yes"
-$isLookupRequired = "Yes"
-$isYesNoRequired = "Yes"
-$isVersionRequired = "No"
-$isCalculatedRequired = "Yes"
+$isChoiceRequired = "No"
+$isDateRequired = "No"
+$isPersonRequired = "No"
+$isLookupRequired = "No"
+$isYesNoRequired = "No"
+$isVersionRequired = "Yes"
+$isCalculatedRequired = "No"
 
 #Global Variables
 
@@ -76,8 +76,8 @@ Function Main() {
 Function CompareSites($SourceSite, $TargetSite) {
 
     Function ProcessSite($Source, $Target) {
-        $SourceListCollection = Get-PnPList -Web $Source | Where { $_.Hidden -eq $false }
-        $TargetListCollection = Get-PnPList -Web $Target | Where { $_.Hidden -eq $false }
+        $SourceListCollection = Get-PnPList -Connection $SourceConnection | Where { $_.Hidden -eq $false }
+        $TargetListCollection = Get-PnPList -Connection $TargetConnection | Where { $_.Hidden -eq $false }
 
         foreach ($sourceList in $SourceListCollection ) {
 
@@ -279,8 +279,8 @@ Function CompareSites($SourceSite, $TargetSite) {
     }
 
 
-    $SourceConnection = Connect-PnPOnline -url $SourceSite   -ReturnConnection
-    $TargetConnection = Connect-PnPOnline -url $TargetSite   -ReturnConnection
+    $SourceConnection = Connect-PnPOnline -url $SourceSite -Credentials (Get-Credential)   -ReturnConnection
+    $TargetConnection = Connect-PnPOnline -url $TargetSite -Credentials (Get-Credential)    -ReturnConnection
 
     $SourceSite = Get-PnPWeb -Connection $SourceConnection
     $TargetSite = Get-PnPWeb -Connection $TargetConnection
