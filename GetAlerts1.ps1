@@ -19,8 +19,7 @@ $SourceConnection =Connect-PnPOnline -url "https://yavatmal3.sharepoint.com/site
  Function ProcessAlerts($site)
  {
 
- function GetAlertForUser ($users)
- {
+  $users =Get-PnPUser -Web $site 
   foreach($user in $users)
  {
  #Write-Host "fetching for user"$user $site.url
@@ -34,12 +33,11 @@ $SourceConnection =Connect-PnPOnline -url "https://yavatmal3.sharepoint.com/site
  Write-Host -ForegroundColor Yellow $alert.Title $alert.List.Title $alert.User.LoginName $site.Url
 }
  
+
 }
 }
-}
- $users =Get-PnPUser -Web $site 
-# $SiteCollectionUsers = Get-PnPSiteCollectionAdmin
-GetAlertForUser $users
+ 
+
 #GetAlertForUser $SiteCollectionUsers
 
 }
@@ -49,12 +47,12 @@ GetAlertForUser $users
 $subsites= Get-PnPSubWebs -Recurse
 $web = Get-PnPWeb 
 
-ProcessAlerts $web
+ProcessAlerts $web $users
 
 
  foreach($site in $subsites)
  {
- ProcessAlerts $site
+ ProcessAlerts $site 
 
 
  }

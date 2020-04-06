@@ -51,6 +51,8 @@ $SourceConnection =Connect-PnPOnline -url "https://yavatmal3.sharepoint.com/site
 $subsites= Get-PnPSubWebs -Recurse
 $web = Get-PnPWeb 
 #$users =Get-PnPUser -Web $web
+$lists =Get-PnPList -Includes LastItemModifiedDate,LastItemUserModifiedDate | Where {$_.LastItemModifiedDate -gt '2020-03-01T18:05:32Z' }| Select Title,LastItemUserModifiedDate,LastItemModifiedDate
+$iTEMS = Get-PnPListItem  | Where {$_.LastItemModifiedDate -gt '2020-03-01T18:05:32Z' }
 ProcessAlerts $web
 
 
