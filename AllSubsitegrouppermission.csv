@@ -1,9 +1,0 @@
-#TYPE Selected.System.String
-"SiteUrl","GroupName","Permission"
-"https://yavatmal3.sharepoint.com/sites/ModernTeam","ModernTeam Members","Edit"
-"https://yavatmal3.sharepoint.com/sites/ModernTeam","ModernTeam Owners","Full Control"
-"https://yavatmal3.sharepoint.com/sites/ModernTeam","ModernTeam Visitors","Read"
-"https://yavatmal3.sharepoint.com/sites/ModernTeam/SubTeam","subsitegroup","Full Control"
-"https://yavatmal3.sharepoint.com/sites/ModernTeam/test1","ModernTeam Members","Edit"
-"https://yavatmal3.sharepoint.com/sites/ModernTeam/test1","ModernTeam Owners","Full Control"
-"https://yavatmal3.sharepoint.com/sites/ModernTeam/test1","ModernTeam Visitors","Read"
