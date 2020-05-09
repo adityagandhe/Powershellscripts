@@ -1,0 +1,2 @@
+﻿Connect-SPOService -Url https://yavatmal3-admin.sharepoint.com/ -Credential(Get-Credential)
+Set-SPOUser -Site https://yavatmal3.sharepoint.com/sites/modernteam -LoginName Aditya@yavatmal3.onmicrosoft.com  -IsSiteCollectionAdmin $true
