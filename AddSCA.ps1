@@ -1,2 +1,13 @@
 ﻿Connect-SPOService -Url https://yavatmal3-admin.sharepoint.com/ -Credential(Get-Credential)
-Set-SPOUser -Site https://yavatmal3.sharepoint.com/sites/modernteam -LoginName Aditya@yavatmal3.onmicrosoft.com  -IsSiteCollectionAdmin $true
+
+$Sites= Get-Content -Path "Z:\pnppowershell\Sites.txt"
+
+foreach($site in $Sites)
+{
+if($site -ne $null)
+{
+Write-Host -ForegroundColor Yellow  "Adding SCA to the site"+$site
+Set-SPOUser -Site $site -LoginName Aditya@yavatmal3.onmicrosoft.com  -IsSiteCollectionAdmin $true
+}
+}
+Disconnect-SPOService

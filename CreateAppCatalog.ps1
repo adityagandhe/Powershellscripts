@@ -1,6 +1,5 @@
 ﻿Connect-SPOService -Url "https://yavatmal3-admin.sharepoint.com"
-Get-SPOTenant | Select PublicCdnEnabled
-Set-SPOTenantCdnEnabled -CdnType Public -NoDefaultOrigins
+Add-SPOSiteCollectionAppCatalog -Site https://yavatmal3.sharepoint.com/sites/ModernCommunication
 
 
 
