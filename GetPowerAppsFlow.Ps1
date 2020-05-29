@@ -8,6 +8,9 @@
 .EXAMPLE
     Execute the script in PowerShell ISE
 .INPUTS
+Run the below 2 lines to download dlls
+Save-Module -Name Microsoft.PowerApps.Administration.PowerShell -Path
+Save-Module -Name Microsoft.PowerApps.PowerShell -Path
     Make sure that updated dlls are used
     Only the user login would be required
 .OUTPUTS
