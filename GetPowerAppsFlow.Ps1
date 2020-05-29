@@ -55,7 +55,7 @@ Function GenerateFlowLog($msg) {
 #variables
 $PowerApps = @()
 $FlowsInfo = @()
-#Add-PowerAppsAccount
+
 try {
     $Apps = Get-AdminPowerApp
     GeneratePowerAppsLog ("Connected to the PowerApps AdminCenter")
