@@ -16,6 +16,7 @@
     GetFlowLog<Date>.csv
     GetPowerAppsReport<Date>.csv
     GetPowerAppsLog<Date>.csv
+    For Canvas Apps it does not give info like SharePoint site and List Url
 .NOTES
     The script is tested only on the dev environment,Verify and review the script before running on prod environment
     Currently the PowerShell support for the PowerApps and Flow is in Preview mode
@@ -53,7 +54,7 @@ Function GenerateFlowLog($msg) {
 }
 
 #variables
-$PowerApps = @()
+$PowerAppsInfo = @()
 $FlowsInfo = @()
 
 try {
@@ -70,6 +71,9 @@ foreach ($app in $apps) {
 
         $connectionList = ""
         $OnPremConnection = ""
+        $SiteUrl = ""
+        $ListUrl = ""
+        $AppType = ""
         foreach ($conRef in $app.Internal.properties.connectionReferences) {
             foreach ($connection in $conRef) {
                 foreach ($connId in ($connection | Get-Member -MemberType NoteProperty).Name) {
@@ -84,6 +88,14 @@ foreach ($app in $apps) {
                 }
             }
         }
+        foreach ($AppInfoSharePoint in $app.Internal.properties.embeddedApp) {
+            $SiteUrl = $AppInfoSharePoint.siteId
+            $ListUrl = $AppInfoSharePoint.listUrl
+            $AppType = $AppInfoSharePoint.type
+        }
+        if ($AppType -eq "") {
+            $AppType = "CanvasApp"
+        }
         $AppInfo | Add-Member -MemberType NoteProperty -Name "DisplayName"  -value $app.Internal.properties.displayName
         $AppInfo | Add-Member -MemberType NoteProperty -Name "CreatedBy"  -value $app.Internal.properties.createdBy.displayName
         $AppInfo | Add-Member -MemberType NoteProperty -Name "Created"  -value $app.Internal.properties.createdTime
@@ -94,14 +106,17 @@ foreach ($app in $apps) {
         $AppInfo | Add-Member -MemberType NoteProperty -Name  "UsesCustomApi"-value $app.Internal.properties.usesCustomApi
         $AppInfo | Add-Member -MemberType NoteProperty -Name  "ConnectionsUsed"-value $connectionList
         $AppInfo | Add-Member -MemberType NoteProperty -Name  "OnPremConnectionsUsed"-value $OnPremiseConnection
-        $PowerApps += $AppInfo
+        $AppInfo | Add-Member -MemberType NoteProperty -Name  "SitePath"-value $SiteUrl
+        $AppInfo | Add-Member -MemberType NoteProperty -Name  "ListPath"-value $ListUrl
+        $AppInfo | Add-Member -MemberType NoteProperty -Name  "TypeofApp"-value $AppType
+        $PowerAppsInfo += $AppInfo
     }
     catch {
         GeneratePowerAppsLog ("ERROR:for fetching the PowerAppsData for" + $app.Internal.properties.displayName + $_.exception.message)
     }
 
 }
-$PowerApps | Export-Csv $PowerAppsReportPath -NoTypeInformation -Append
+$PowerAppsInfo | Export-Csv $PowerAppsReportPath -NoTypeInformation -Append
 Write-host -ForegroundColor Green "Script execution for the PowerApps is completed...."
 Write-host -ForegroundColor Green "Script execution for the Flows is in progress...."
 
@@ -151,7 +166,10 @@ foreach ($flow in $flows) {
             }
         }
 
+
+
         $flowInfo | Add-Member -MemberType NoteProperty -Name "Connections"  -Value $connectionList
+
 
 
         $FlowsInfo += $flowInfo
