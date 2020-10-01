@@ -1,5 +1,6 @@
-﻿Connect-SPOService -Url "https://yavatmal3-admin.sharepoint.com"
-Add-SPOSiteCollectionAppCatalog -Site https://yavatmal3.sharepoint.com/sites/ModernCommunication
+﻿Connect-SPOService -Url "https://yavatmal5-admin.sharepoint.com"
+Add-SPOSiteCollectionAppCatalog -Site https://yavatmal5.sharepoint.com/sites/TestModern
+
 
 
 

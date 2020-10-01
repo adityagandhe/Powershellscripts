@@ -1,0 +1,1 @@
+﻿Initialize-PnPPowerShellAuthentication -ApplicationName ModernizationScannerApp -Tenant yavatmal5.onmicrosoft.com -Scopes "SPO.Sites.FullControl.All","MSGraph.Group.Read.All"  -OutPath c:\temp -CertificatePassword (ConvertTo-SecureString -String "htc_mozart8" -AsPlainText -Force)
