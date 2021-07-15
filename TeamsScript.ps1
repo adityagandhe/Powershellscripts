@@ -45,49 +45,64 @@ catch {
     GenerateLog ("Error in  connection to the MS Teams ")
 }
 #$TeamDetails = Get-Content -Path "";
-    $teamsInput = Import-Csv $teamsInputpath
-    $teamsInput | ForEach-Object {
-    $teamName =$_."Name";
-    $displayName=$_."DispalyName";
-    $visibility=$_."Visibility";
-    }
-    
-try {
+$teamsInput = Import-Csv $teamsInputpath
+$teamsInput | ForEach-Object {
+    $teamName = $_."Name";
+    $displayName = $_."DispalyName";
+    $visibility = $_."Visibility";
 
-    $group = New-Team -MailNickname $teamName -displayname  $displayName -Visibility $visibility
-    GenerateLog ("Creating the MS team with the title ")
-    Write-Host -BackgroundColor Green "Created new MS team with the name:"$teamName;
+
+try {
+    if ($teamName -ne $null -or $displayName -ne $null -or $visibility -ne $null )
+    {
+        $group = New-Team -MailNickname $teamName -displayname  $displayName -Visibility $visibility
+        GenerateLog ("Creating the MS team with the title "+$teamName)
+        Write-Host -BackgroundColor Green "Created new MS team with the name:"$teamName;
+    }
+    else {
+        GenerateLog ("Please provide the required Information for team creation ")
+    }
 }
 
 catch {
     GenerateLog ("Error in creating the MS team with the title ")
 }
-try {
- $userInput = Import-Csv $userInputpath
- $userInput | ForEach-Object {
-$userEmail= $_."Email";
-$role=$_."Role";
-Add-TeamUser -GroupId $group.GroupId -User $userEmail -Role $role
-
-
-    GenerateLog ("Adding member:"+$userEmail+"with the role:"+$role+" to the MS team with the title"+$teamName)
 }
+try {
+    $userInput = Import-Csv $userInputpath
+    $userInput | ForEach-Object {
+        $userEmail = $_."Email";
+        $role = $_."Role";
+        if ($userEmail -ne $null -or $role -ne $null  )
+        {
+            Add-TeamUser -GroupId $group.GroupId -User $userEmail -Role $role
+
+
+            GenerateLog ("Adding member:" + $userEmail + "with the role:" + $role + " to the MS team with the title" + $teamName)
+        }else { GenerateLog ("Please provide the required Information for team's user addition ") }
+    }
 }
 catch {
-    GenerateLog ("Error in adding member:"+$userEmail+"with the role:"+$role+" to the MS team with the title"+$teamName)
+    GenerateLog ("Error in adding member:" + $userEmail + "with the role:" + $role + " to the MS team with the title" + $teamName)
 }
 
 try {
-$channelInput = Import-Csv $channelInputpath
- $channelInput | ForEach-Object {
+    $channelInput = Import-Csv $channelInputpath
+    $channelInput | ForEach-Object {
 
-$channelName=$_."ChannelName";
-    New-TeamChannel -GroupId $group.GroupId -DisplayName $channelName
-    GenerateLog ("Adding channel:"+$channelName+"to the MS team with the title:"+$teamName)
-}
+        $channelName = $_."ChannelName";
+        if ($channelName -ne $null   )
+        {
+            New-TeamChannel -GroupId $group.GroupId -DisplayName $channelName
+            GenerateLog ("Adding channel:" + $channelName + "to the MS team with the title:" + $teamName)
+        }
+        else {
+            GenerateLog ("Please provide the required Information for team's channel creation ")
+        }
+    }
 }
 catch {
-    GenerateLog ("Error in  channel:"+$channelName+"to the MS team with the title:"+$teamName)
+    GenerateLog ("Error in  channel:" + $channelName + "to the MS team with the title:" + $teamName)
 }
 
 
