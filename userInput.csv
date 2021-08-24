@@ -1,3 +1,5 @@
-Email,Role
-Aditya@Yavatmal5.onmicrosoft.com,Owner
-Kajal@Yavatmal5.onmicrosoft.com,Member
+Email,Role,TeamId
+Kashinath@Yavatmal5.onmicrosoft.com,Member,d460b9da-00f2-47a1-a6cf-ea987e6fe60e
+Kajal@Yavatmal5.onmicrosoft.com,Owner,d460b9da-00f2-47a1-a6cf-ea987e6fe60e
+Aditya@Yavatmal5.onmicrosoft.com,Member,1ff2c934-14e2-4736-9d4a-48a1b5063f7e
+Kajal@Yavatmal5.onmicrosoft.com,Owner,fd3e0158-cdfb-41b0-afc2-d688d585ae9a

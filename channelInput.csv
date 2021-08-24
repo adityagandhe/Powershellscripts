@@ -1,3 +1,5 @@
-ChannelName
-TestChannel
-TestChannel2
+ChannelName,TeamId
+TestChannel1,d460b9da-00f2-47a1-a6cf-ea987e6fe60e
+TestChannel11,d460b9da-00f2-47a1-a6cf-ea987e6fe60e
+TestChannel12,1ff2c934-14e2-4736-9d4a-48a1b5063f7e
+TestChannel13,fd3e0158-cdfb-41b0-afc2-d688d585ae9a
