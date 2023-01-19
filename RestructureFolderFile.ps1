@@ -43,7 +43,7 @@ function Update-HistoricalId ($SiteURL, $ListName) {
             try {
              $item = Get-PnPListItem -List $ListName -Query "<View><Query><Where><Eq><FieldRef Name='UniqueId'/><Value Type='Guid'>$($Folders[$i].UniqueId)</Value></Eq></Where></Query></View>"
                  Write-Host -ForegroundColor Green "Execution in progress for the folder number: " $i "and total folders are :" $Folders.Count
-               if($item.Fieldvalues.Processed -eq $null)
+               if($item.Fieldvalues.Processed -eq $null -and($item.Fieldvalues.FileLeafRef -like "DRU*" -or $item.Fieldvalues.FileLeafRef -like "DRI*" ))
                {
            # Forms is the OOTB folder created inside a library
                 if ($Folders[$i].Name -eq "Forms" -or $Folders[$i].Name -eq $null) {
@@ -142,7 +142,8 @@ function Update-HistoricalId ($SiteURL, $ListName) {
                     }
                     else
                     {
-                     Write-Host -ForegroundColor Red "Folder is already processed :" $item.FieldValues.FileRef
+                     Write-Host -ForegroundColor Red "Folder is already processed OR the name of the folder is not in a required format:" $item.FieldValues.FileRef
+                       GenerateLog("FAILURE: Folder is already processed OR the name of the folder is not in a required format : " + $item.FieldValues.FileRef  )
                     }
                          
             }
