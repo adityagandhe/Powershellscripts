@@ -41,8 +41,11 @@ function Update-HistoricalId ($SiteURL, $ListName) {
         for ($i = 0; $i -lt $Folders.Count ; $i++) {
           
             try {
-                 Write-Host "Execution in progress for the folder number: " $i "and total folders are :" $Folders.Count
-                  # Forms is the OOTB folder created inside a library
+             $item = Get-PnPListItem -List $ListName -Query "<View><Query><Where><Eq><FieldRef Name='UniqueId'/><Value Type='Guid'>$($Folders[$i].UniqueId)</Value></Eq></Where></Query></View>"
+                 Write-Host -ForegroundColor Green "Execution in progress for the folder number: " $i "and total folders are :" $Folders.Count
+               if($item.Fieldvalues.Processed -eq $null)
+               {
+           # Forms is the OOTB folder created inside a library
                 if ($Folders[$i].Name -eq "Forms" -or $Folders[$i].Name -eq $null) {
 
                      Write-host -ForegroundColor Red "Ignoring blank folder or OOTB Forms folder"
@@ -50,19 +53,20 @@ function Update-HistoricalId ($SiteURL, $ListName) {
                     else
                     {
                      # Try to find if subfolder with name report os found
-
+                    
                     $ReportPath_temp = $ListName + "/" + $Folders[$i].Name + "/" + $ReportName;
 
                     try {
                         $ReportPath = Get-PnPFolder -Url $ReportPath_temp -ErrorAction SilentlyContinue
                     }
                     catch {
-                        Write-host -ForegroundColor Red "No report folder exists for the root folder with path"+$Folders[$i].ServerRelativeUrl
-                        GenerateLog("FAILURE: No report folder exists for the root folder with path : " + $Folders[$i].ServerRelativeUrl  )
+                        Write-host -ForegroundColor Red "No report folder exists for the root folder with path" $Folders[$i].ServerRelativeUrl
                     }
                     if ([string]::IsNullOrEmpty($ReportPath.Name )) {
                        # Write-Host -ForegroundColor Red " Folder: " $Folders[$i].Name "does not have a report folder :" 
-           
+                        Write-host -ForegroundColor Red "No report folder exists for the root folder with path" $Folders[$i].ServerRelativeUrl
+                        GenerateLog("FAILURE: No report folder exists for the root folder with path : " + $Folders[$i].ServerRelativeUrl  )
+                        Set-PnPListItem -List $ListName -Identity $item.Id -Values @{"Processed" = "No Report Folder" }
                     }
                     # HAS THE REPORT FOLDER
                     else {
@@ -76,6 +80,7 @@ function Update-HistoricalId ($SiteURL, $ListName) {
                             {
                             Write-host -ForegroundColor Red "unzip folder exists for "$Folders[$i].ServerRelativeUrl
                             GenerateLog("FAILURE: Unzip folder  exists for the root folder with path : " + $Folders[$i].ServerRelativeUrl  )
+                            Set-PnPListItem -List $ListName -Identity $item.Id -Values @{"Processed" = "Unzipped already exists" }
                             }
                         }
                         catch {
@@ -125,6 +130,7 @@ function Update-HistoricalId ($SiteURL, $ListName) {
                               }
                             # }
                             }
+                            Set-PnPListItem -List $ListName -Identity $item.Id -Values @{"Processed" = "Yes" }
                             }
                             else
                             {
@@ -133,12 +139,12 @@ function Update-HistoricalId ($SiteURL, $ListName) {
                             }
                         }
                     }
-                   
-                    
-         
-
-                
-                   
+                    }
+                    else
+                    {
+                     Write-Host -ForegroundColor Red "Folder is already processed :" $item.FieldValues.FileRef
+                    }
+                         
             }
             catch {
                 GenerateLog("ERROR: Error in updating the historical id for the folder:" + $Folders[$i].Name + "with exception : " + $_.exception.message)
