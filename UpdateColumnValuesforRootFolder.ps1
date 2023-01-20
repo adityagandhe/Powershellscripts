@@ -12,7 +12,7 @@ $date = Get-Date -Format yyyyMMddHHmmss
 $fileref="/sites/ModernTeam/DocumentSetModern/"
 $Sitepath = $filepath + "\UpdateHistoricalId.csv"
 $LogFilePath = $filepath + "\UpdateHistoricalIdLog" + $date + ".csv"
-
+$Countupdate =0;
 Function GenerateLog($msg) {
 
     $text = "{0,-30} {1}" -f $date, $msg
@@ -35,44 +35,47 @@ function Update-HistoricalId ($SiteURL, $ListName) {
        # $Folders = Get-PnPFolderItem -FolderSiteRelativeUrl $ListName -ItemType Folder 
                 $Folders = Get-PnPListItem -List $ListName -PageSize 1000 | Where-Object { $_.FileSystemObjectType -eq "Folder"}
      
-        
+        Write-Host -ForegroundColor Green "Total number of folders found in this library is " $Folders.Count
         for ($i = 0; $i -lt $Folders.Count ; $i++) {
          
          # $item = Get-PnPListItem -List $ListName -Query "<View><Query><Where><Eq><FieldRef Name='UniqueId'/><Value Type='Guid'>$($Folders[$i].UniqueId)</Value></Eq></Where></Query></View>"
           $childfolderpath =$fileref + $Folders[$i].FieldValues.FileLeafRef
-          if(($Folders[$i].Fieldvalues.FileLeafRef -like "DRU*" -or $Folders[$i].Fieldvalues.FileLeafRef -like "DRI*" ) -and ($Folders[$i].Fieldvalues.FileRef -eq $childfolderpath))
+          if(($Folders[$i].Fieldvalues.FileLeafRef -like "DRU*" -or $Folders[$i].Fieldvalues.FileLeafRef -like "DRI*" ) -and ($Folders[$i].Fieldvalues.FileRef -eq $childfolderpath) -and ([string]::IsNullOrEmpty($Folders[$i].FieldValues.HistoricalId)))
           {
            
             try {
                 if ($Folders[$i].Fieldvalues.FileLeafRef -ne "Forms" -or $Folders[$i].Fieldvalues.FileLeafRef -ne $null) {
-                    
+                    $Countupdate = $Countupdate + 1
                     GenerateLog("INFO:Updating the historical id for the  folder : " + $Folders[$i].Fieldvalues.FileLeafRef + "with the path: " + $Folders[$i].Fieldvalues.FileRef)
-                    Write-Host -ForegroundColor Yellow "Updating historical id for the folder" $Folders[$i].Fieldvalues.FileLeafRef
-                    if ([string]::IsNullOrEmpty($Folders[$i].FieldValues.HistoricalId) ) {
+                    Write-Host -ForegroundColor Green "Updating historical id for the folder" $Folders[$i].Fieldvalues.FileLeafRef
+                   # if ([string]::IsNullOrEmpty($Folders[$i].FieldValues.HistoricalId) ) {
     
                         Set-PnPListItem -List $ListName -Identity $Folders[$i].Fieldvalues.ID -Values @{"HistoricalId" = $($Folders[$i].Fieldvalues.FileLeafRef) }
-                        GenerateLog("SUCCESS: Updated the historical id folder : " + $Folders[$i].Fieldvalues.FileLeafRef + "at path:" + $Folders[$i].Fieldvalues.FileRef )
+                        GenerateLog("SUCCESS: Updated the historical id folder : " + $Folders[$i].Fieldvalues.FileLeafRef + " at path:" + $Folders[$i].Fieldvalues.FileRef )
          
 
-                    }
-                    else {
-                        Write-Host -ForegroundColor Red "Folder"$Folders[$i].Name "with the path:" $Folders[$i].Fieldvalues.FileLeafRef "already has the value for historical id:" $Folders[$i].FieldValues.HistoricalId
-                        GenerateLog("FAILURE: Folder: " + $Folders[$i].Name + "with the path: " + $Folders[$i].Fieldvalues.FileLeafRef + "already has the value for historical id: " + $Folders[$i].FieldValues.HistoricalId)
+                    #}
+                   # else {
+                   #     Write-Host -ForegroundColor Red "Folder"$Folders[$i].Name "with the path:" $Folders[$i].Fieldvalues.FileLeafRef "already has the value for historical id:" $Folders[$i].FieldValues.HistoricalId
+                   #     GenerateLog("FAILURE: Folder: " + $Folders[$i].Name + "with the path: " + $Folders[$i].Fieldvalues.FileLeafRef + "already has the value for historical id: " + $Folders[$i].FieldValues.HistoricalId)
                         
-                    }
+                   # }
 
                 }
             }
             catch {
                 GenerateLog("FAILURE: Error in updating the historical id for the folder:" + $Folders[$i].Name + "with exception : " + $_.exception.message)
             }
+          
         }
         else
         {
-        GenerateLog("FAILURE:Foldername is not DRU/DRI or is not a parent level folder for: " + $Folders[$i].Fieldvalues.FileLeafRef + "with the path: " + $Folders[$i].Fieldvalues.FileRef)
-                    Write-Host -ForegroundColor Yellow "Foldername is not DRU or DRI for:" $Folders[$i].Fieldvalues.FileRef
+        GenerateLog("FAILURE:Foldername is not DRU/DRI OR HistoricalId is already present OR is not a parent level folder for: " + $Folders[$i].Fieldvalues.FileLeafRef + "with the path: " + $Folders[$i].Fieldvalues.FileRef)
+                    Write-Host -ForegroundColor Red "Foldername is not DRU/DRI OR HistoricalId is already present OR is not a parent level folderfor:" $Folders[$i].Fieldvalues.FileRef
         }
         }
+  Write-Host -ForegroundColor Cyan "Total number of items updated is "  $Countupdate
+GenerateLog("INFO:Total number of folders updated are : " + $Countupdate)
     }
     catch {
         write-host "Error: $($_.Exception.Message)" -foregroundcolor Red
