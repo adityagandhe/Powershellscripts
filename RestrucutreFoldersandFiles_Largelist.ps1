@@ -3,7 +3,7 @@
 #Get the Folder from site relative URL
 #Config Variables
 Clear-Host
-Write-host -ForegroundColor Green "Script execution for adding unzipp folder in final reports folders is in progress...."
+Write-host -ForegroundColor Green "Script execution for adding unzip folder in final reports folders is in progress...."
 $now =Get-Date
      Write-Host -ForegroundColor Yellow "started at" $now 
 $filepath = Split-Path $MyInvocation.MyCommand.Path
@@ -193,7 +193,7 @@ function Main() {
 
 Main
 
-Write-host -ForegroundColor Green " Script execution for adding unzipp folder in final reports folders root level folders is Completed...."
+Write-host -ForegroundColor Green " Script execution for adding unzip folder in final reports folders root level folders is Completed...."
 $now =Get-Date
      Write-Host -ForegroundColor Yellow "STOPPED at" $now 
        GenerateLog("INFO:Script completed at : " + $now)
