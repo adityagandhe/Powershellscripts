@@ -27,6 +27,7 @@ function Get-RootLevelFolders ($SiteURL, $ListName) {
     Try {
         #Connect to PnP Online
         Connect-PnPOnline -Url $SiteURL -UseWebLogin
+        Write-Host -ForegroundColor Black "wORKING"
         GenerateLog("INFO:Script started at : " + $now)
         GenerateLog("SUCCESS:Connected successfully for the site: " + $SiteURL)
         #Get Id of Folder working
